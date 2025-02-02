@@ -1,0 +1,57 @@
+variant: fcos
+version: 1.6.0
+passwd:
+  users:
+    - name: core
+      ssh_authorized_keys:
+        - ssh-ed25519 <...>
+systemd:
+  units:
+    - name: rpm-ostree-install-nomad.service
+      enabled: true
+      contents: |
+        [Unit]
+        Description=Layer nomad with rpm-ostree
+        Wants=network-online.target
+        After=network-online.target
+        # We run before `zincati.service` to avoid conflicting rpm-ostree
+        # transactions.
+        Before=zincati.service
+        ConditionPathExists=!/var/lib/%N.stamp
+
+        [Service]
+        Type=oneshot
+        RemainAfterExit=yes
+        ExecStart=/usr/bin/rpm-ostree install -y --allow-inactive nomad nomad-driver-podman lsscsi
+        ExecStart=/bin/touch /var/lib/%N.stamp
+        ExecStart=/bin/systemctl --no-block reboot
+
+        [Install]
+        WantedBy=multi-user.target
+storage:
+  disks:
+    - device: /dev/disk/by-path/platform-fd500000.pcie-pci-0000:01:00.0-usb-0:2:1.0-scsi-0:0:0:0
+      wipe_table: true
+      partitions:
+        - label: var
+          size_mib: 0
+  filesystems:
+    - path: /var
+      device: /dev/disk/by-partlabel/var
+      format: ext4
+      wipe_filesystem: true
+      with_mount_unit: true
+  files:
+    - path: /etc/yum.repos.d/hashicorp.repo
+      overwrite: true
+      contents:
+        inline: |
+          [hashicorp]
+          name=Hashicorp Stable - $basearch
+          baseurl=https://rpm.releases.hashicorp.com/fedora/$releasever/$basearch/stable
+          enabled=1
+          gpgcheck=1
+          gpgkey=https://rpm.releases.hashicorp.com/gpg
+  links:
+    - path: /var/lib/nomad/plugins/nomad-driver-podman
+      target: /usr/bin/nomad-driver-podman
