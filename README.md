@@ -50,5 +50,5 @@ At present, Nomad is not pre-configured by Ignition and the systemd unit is left
 Going forward, the following tasks are on the near/mid-term radar:
 
 * Per-node configuration of Nomad upon first boot. Perhaps remote ignition file merges or ansible-pull.
-* Implement a Nomad-aware [FleetLock](https://coreos.github.io/zincati/development/fleetlock/protocol/) service to orchestrate Zincati updates.
+* Implement a Nomad-aware [FleetLock](https://coreos.github.io/zincati/development/fleetlock/protocol/) service to orchestrate Zincati updates. Handle node drain, scheduling eligibility, server/client upgrade precedence, per-pool maximum unavailability, etc.
 * CM4 support - I run a separate Turing Pi 2 board. Probably just need to add a serial console config to attach a tty to the UART, handle writing the image out eMMC or a raw file, and things will otherwise Just Work™.
