@@ -20,7 +20,7 @@ Everything can be run via a Makefile with the following targets:
 
 `cache`: Downloads a local copy of the latest Fedora CoreOS image, to prevent re-downloading on each run when writing multiple end images.
 
-`install`: Invokes each of the above as a dependency (if not already up-to-date), then uses the `coreos-installer` image via Podman to deploy onto a target device, as defined by teh `TARGET_DEV` variable. Installs the unpacked files from the `firmware` into the resultant boot partition.
+`install`: Invokes each of the above as a dependency (if not already up-to-date), then uses the `coreos-installer` image via Podman to deploy onto a target device, as defined by the `TARGET_DEV` variable. Installs the unpacked files from the `firmware` into the resultant boot partition.
 
 `clean`: Cleans up build artifacts from all other targets.
 
