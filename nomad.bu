@@ -22,7 +22,7 @@ systemd:
         [Service]
         Type=oneshot
         RemainAfterExit=yes
-        ExecStart=/usr/bin/rpm-ostree install -y --allow-inactive nomad nomad-driver-podman lsscsi
+        ExecStart=/usr/bin/rpm-ostree install -y --allow-inactive nomad nomad-driver-podman nomad-driver-exec2 lsscsi
         ExecStart=/bin/touch /var/lib/%N.stamp
         ExecStart=/bin/systemctl --no-block reboot
 
@@ -55,3 +55,5 @@ storage:
   links:
     - path: /var/lib/nomad/plugins/nomad-driver-podman
       target: /usr/bin/nomad-driver-podman
+    - path: /var/lib/nomad/plugins/nomad-driver-exec2
+      target: /usr/bin/nomad-driver-exec2
