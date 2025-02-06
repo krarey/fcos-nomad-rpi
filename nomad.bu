@@ -11,7 +11,7 @@ systemd:
       enabled: true
       contents: |
         [Unit]
-        Description=Layer nomad with rpm-ostree
+        Description=Layer nomad and dependencies with rpm-ostree
         Wants=network-online.target
         After=network-online.target
         # We run before `zincati.service` to avoid conflicting rpm-ostree
@@ -22,12 +22,16 @@ systemd:
         [Service]
         Type=oneshot
         RemainAfterExit=yes
-        ExecStart=/usr/bin/rpm-ostree install -y --allow-inactive nomad nomad-driver-podman nomad-driver-exec2 lsscsi
+        ExecStart=/usr/bin/rpm-ostree install -y --allow-inactive nomad nomad-driver-podman nomad-driver-exec2 lsscsi python3
         ExecStart=/bin/touch /var/lib/%N.stamp
         ExecStart=/bin/systemctl --no-block reboot
 
         [Install]
         WantedBy=multi-user.target
+    - name: podman.socket
+      enabled: true
+    - name: docker.socket
+      enabled: false
 storage:
   disks:
     - device: /dev/disk/by-path/platform-fd500000.pcie-pci-0000:01:00.0-usb-0:2:1.0-scsi-0:0:0:0
