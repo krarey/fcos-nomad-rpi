@@ -1,5 +1,8 @@
 variant: fcos
 version: 1.6.0
+kernel_arguments:
+  should_exist:
+    - selinux=0
 passwd:
   users:
     - name: core
